@@ -1,10 +1,15 @@
 package webdriver.automation.exercises;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
@@ -33,9 +38,6 @@ public class AutomationDriver {
 		Assert.assertTrue(
 				driver.findElement(By.xpath("//div[@id='radio-btn-example']/fieldset/label[3]/input")).isSelected());
 		Thread.sleep(1200L);
-
-		// closing driver
-		driver.close();
 	}
 
 	/*
@@ -57,39 +59,37 @@ public class AutomationDriver {
 				break;
 			}
 		}
-		// closing driver
-		driver.close();
+		Thread.sleep(1200L);
 	}
 
 	/*
-	 * Function Name : exerciseTwo Arguments : WebDriver element Date : 01/10/2021
+	 * Function Name : exerciseThree Arguments : WebDriver element Date : 01/10/2021
 	 */
 
 	public static void exerciseThree(WebDriver driver) throws InterruptedException {
 
-		WebElement selectDropdwn = driver.findElement(By.xpath("//*[@id='dropdown-class-example']"));
-		Select options = new Select(selectDropdwn);
-		selectDropdwn.click();
+		WebElement selectDropdown = driver.findElement(By.xpath("//*[@id='dropdown-class-example']"));
+		Select options = new Select(selectDropdown);
+		selectDropdown.click();
 		Thread.sleep(1200L);
 		options.selectByIndex(1);
 		Thread.sleep(1200L);
-		selectDropdwn.click();
+		selectDropdown.click();
 		Thread.sleep(1200L);
-		selectDropdwn.click();
+		selectDropdown.click();
 		options.selectByIndex(2);
 		Thread.sleep(1200L);
-		selectDropdwn.click();
+		selectDropdown.click();
 		Thread.sleep(1200L);
-		selectDropdwn.click();
+		selectDropdown.click();
 		options.selectByIndex(3);
 		Thread.sleep(1200L);
-		selectDropdwn.click();
+		selectDropdown.click();
 		Thread.sleep(1200L);
-		selectDropdwn.click();
 	}
 
 	/*
-	 * Function Name : exerciseTwo Arguments : WebDriver element Date : 01/10/2021
+	 * Function Name : exerciseFour Arguments : WebDriver element Date : 01/10/2021
 	 */
 
 	public static void exerciseFour(WebDriver driver) throws InterruptedException {
@@ -117,9 +117,6 @@ public class AutomationDriver {
 		Thread.sleep(500L);
 
 		Assert.assertFalse(driver.findElement(By.xpath("//input[@id='checkBoxOption3']")).isSelected());
-
-		// closing driver
-		driver.close();
 	}
 
 	/*
@@ -127,13 +124,14 @@ public class AutomationDriver {
 	 * 01/10/2021
 	 */
 
-	public static void exerciseFourPointOne(WebDriver driver) {
+	public static void exerciseFourPointOne(WebDriver driver) throws InterruptedException {
 		driver.findElement(By.xpath("//input[@id='checkBoxOption1']")).click();
 		driver.findElement(By.xpath("//input[@id='checkBoxOption2']")).click();
 		driver.findElement(By.xpath("//input[@id='checkBoxOption3']")).click();
 		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='checkBoxOption1']")).isSelected());
 		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='checkBoxOption2']")).isSelected());
 		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='checkBoxOption3']")).isSelected());
+		Thread.sleep(1200L);
 	}
 
 	/*
@@ -141,56 +139,164 @@ public class AutomationDriver {
 	 * 01/10/2021
 	 */
 
-	public static void exerciseFourPointTwo(WebDriver driver) {
+	public static void exerciseFourPointTwo(WebDriver driver) throws InterruptedException {
 		driver.findElement(By.xpath("//input[@id='checkBoxOption1']")).click();
 		driver.findElement(By.xpath("//input[@id='checkBoxOption2']")).click();
 		driver.findElement(By.xpath("//input[@id='checkBoxOption3']")).click();
 		Assert.assertFalse(driver.findElement(By.xpath("//input[@id='checkBoxOption1']")).isSelected());
 		Assert.assertFalse(driver.findElement(By.xpath("//input[@id='checkBoxOption2']")).isSelected());
 		Assert.assertFalse(driver.findElement(By.xpath("//input[@id='checkBoxOption3']")).isSelected());
+		Thread.sleep(1200L);
 	}
 
+	/*
+	 * Function Name : exerciseFive Arguments : WebDriver element Date : 01/10/2021
+	 */
+
+	public static void exerciseFive(WebDriver driver) throws InterruptedException {
+
+		driver.findElement(By.cssSelector("button[id='openwindow']")).click();
+		Set<String> windows = driver.getWindowHandles();
+		Iterator<String> itr = windows.iterator();
+		String parentId = itr.next();
+		String childId = itr.next();
+		driver.switchTo().window(childId);
+		Thread.sleep(3000L);
+		driver.close();
+		driver.switchTo().window(parentId);
+		Assert.assertTrue(driver.getTitle().equals("Practice Page"));
+		Thread.sleep(3000L);
+	}
+
+	/*
+	 * Function Name : exerciseSix Arguments : WebDriver element Date : 01/10/2021
+	 */
+
+	public static void exerciseSix(WebDriver driver) throws InterruptedException {
+
+		Actions keyPress = new Actions(driver);
+
+		keyPress.moveToElement(driver.findElement(By.xpath("//a[@id='opentab']"))).keyDown(Keys.CONTROL).click().build()
+				.perform();
+		Set<String> windows = driver.getWindowHandles();
+
+		Iterator<String> itr = windows.iterator();
+
+		// Storing Parent Id
+		String parentId = itr.next();
+
+		// Storing Child Id
+		String childId = itr.next();
+
+		// Switching from parent to child tab
+		driver.switchTo().window(childId);
+
+		Assert.assertTrue(driver.getTitle().contains("Rahul Shetty Academy"));
+		Thread.sleep(2000L);
+
+		driver.close();
+
+		Thread.sleep(2000L);
+		// Returning back to parent tab(original tab)
+
+		driver.switchTo().window(parentId);
+		Assert.assertTrue(driver.getTitle().contains("Practice Page"));
+		Thread.sleep(1200L);
+	}
+
+	/*
+	 * Function Name : exerciseSeven Arguments : WebDriver element Date : 01/10/2021
+	 */
+
+	public static void exerciseSeven(WebDriver driver) throws InterruptedException {
+		
+		driver.findElement(By.xpath("//*[@id='name']")).sendKeys("Yashawantkumar");
+		Thread.sleep(1200L);
+		driver.findElement(By.id("alertbtn")).click();
+		Thread.sleep(3000L);
+		driver.switchTo().alert().accept();
+		Thread.sleep(1200L);
+	}
+
+	/*
+	 * Function Name : exerciseEight Arguments : WebDriver element Date : 01/10/2021
+	 */
+
+	public static void exerciseEight(WebDriver driver) throws InterruptedException {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0,1000)");
+
+		String list = driver.findElement(By.name("courses")).getText();
+		System.out.println(list);
+	}
+
+	/*
+	 * Function Name : exerciseNine Arguments : WebDriver element Date : 01/10/2021
+	 */
+
+	public static void exerciseNine(WebDriver driver) throws InterruptedException {
+		Actions a = new Actions(driver);
+		Thread.sleep(3000);
+		a.moveToElement(driver.findElement(By.xpath("//button[@id='mousehover']"))).click().build().perform();
+		Thread.sleep(3000);
+		a.moveToElement(driver.findElement(By.cssSelector("a[href='#top']"))).click().build().perform();
+		Thread.sleep(1200L);
+	}
+
+	/*
+	 * Function name: main() Created on: 01-10-2021 Creator:Yashawantkumar
+	 */
+	
 	public static void main(String[] args) {
 
 		System.setProperty("webdriver.chrome.driver", "H:\\\\Downloads\\\\chromedriver.exe");
 
+		// creating WebDriver object
 		WebDriver driver = new ChromeDriver();
+
+		// maximize the screen
+		driver.manage().window().maximize();
 
 		// URL in the browser
 		driver.get("https://rahulshettyacademy.com/AutomationPractice/");
 
-		// calling exercise1 method
-		// try {
-		// AutomationDriver.exerciseOne(driver);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
+		try {
 
-		// calling exercise2 method
-		// try {
-		// AutomationDriver.exerciseTwo(driver);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
+			// calling exerciseOne method
+			AutomationDriver.exerciseOne(driver);
 
-		// calling exercise3 method
-		 try {
-		 AutomationDriver.exerciseThree(driver);
-		 } catch (InterruptedException e) {
-		 e.printStackTrace();
-		 }
+			// calling exerciseTwo method
+			AutomationDriver.exerciseTwo(driver);
 
-		// calling exercise4 method
-		// try {
-		// AutomationDriver.exerciseFour(driver);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
+			// calling exerciseThree method
+			AutomationDriver.exerciseThree(driver);
 
-		// calling exerciseFourPointOne method
-		//AutomationDriver.exerciseFourPointOne(driver);
+			// calling exerciseFour method
+			AutomationDriver.exerciseFour(driver);
 
-		// calling exerciseFourPointTwo method
-		//AutomationDriver.exerciseFourPointTwo(driver);
+			// calling exerciseFourPointOne method
+			AutomationDriver.exerciseFourPointOne(driver);
+
+			// calling exerciseFourPointTwo method
+			AutomationDriver.exerciseFourPointTwo(driver);
+
+			// calling exerciseFive method
+			AutomationDriver.exerciseFive(driver);
+
+			// calling exerciseSix method
+			AutomationDriver.exerciseSix(driver);
+
+			// calling exerciseSeven method
+			AutomationDriver.exerciseSeven(driver);
+
+			// calling exerciseEight method
+			AutomationDriver.exerciseEight(driver);
+
+			// calling exerciseNine method
+			AutomationDriver.exerciseNine(driver);
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
