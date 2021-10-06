@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
+import org.testng.asserts.Assertion;
 
 public class AutomationDriver {
 
@@ -86,6 +87,7 @@ public class AutomationDriver {
 		Thread.sleep(1200L);
 		selectDropdown.click();
 		Thread.sleep(1200L);
+		selectDropdown.click();
 	}
 
 	/*
@@ -135,7 +137,8 @@ public class AutomationDriver {
 	}
 
 	/*
-	 * Function Name : exerciseFourPointTwo Arguments : WebDriver element Date :
+	 * Function Name : exerc
+	 * iseFourPointTwo Arguments : WebDriver element Date :
 	 * 01/10/2021
 	 */
 
@@ -224,10 +227,14 @@ public class AutomationDriver {
 
 	public static void exerciseEight(WebDriver driver) throws InterruptedException {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("window.scrollBy(0,1000)");
-
-		String list = driver.findElement(By.name("courses")).getText();
-		System.out.println(list);
+		js.executeScript("window.scrollBy(0,680)");
+		
+		int numOfDataFields=driver.findElements(By.xpath("//table[@class=\"table-display\"]/tbody/tr/td")).size();
+		List<WebElement> dataFields=driver.findElements(By.xpath("//table[@class=\"table-display\"]/tbody/tr/td"));
+		for(int i=0;i<numOfDataFields;i++)
+		{
+			Assert.assertFalse(dataFields.get(i).getText().toString().isEmpty());
+		}
 	}
 
 	/*
